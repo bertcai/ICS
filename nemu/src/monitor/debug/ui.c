@@ -36,6 +36,45 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
+static int cmd_si(char *args){
+	if (args == NULL){
+		cpu_exec(1);
+	}
+	else {
+		long a;
+		a = strtol(args,NULL,10);
+		cpu_exec(a);
+	}
+	return 0;
+}
+static int cmd_info(char *args){
+	    if (strcmp(args,"r") == 0){
+			printf(" %x \t %d \n", cpu.eax, cpu.eax);
+			printf(" %x \t %d \n", cpu.edx, cpu.edx);
+			printf(" %x \t %d \n", cpu.ecx, cpu.ecx);
+			printf(" %x \t %d \n", cpu.ebx, cpu.ebx);
+			printf(" %x \t %d \n", cpu.ebp, cpu.ebp);
+			printf(" %x \t %d \n", cpu.esi, cpu.esi);
+			printf(" %x \t %d \n", cpu.edi, cpu.edi);
+			printf(" %x \t %d \n", cpu.esp, cpu.esp);																			    
+		}
+		return 0;
+}
+ 
+static int cmd_x(char *args){
+		int temp;
+		char *a = strtok(args, " ");
+		char *b = strtok(NULL, " ");
+		temp = strtol(a,NULL,10);
+		long start_ad;
+		start_ad = strtol(b, NULL, 16);
+		int i = 1;
+		for(i =1; i <= temp; i++){
+			printf("%d \n", swaddr_read(start_ad, 1));
+			start_ad++;
+		}
+		return 0;
+}
 static int cmd_help(char *args);
 
 static struct {
@@ -46,7 +85,9 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
-
+	{ "si", "single step", cmd_si},
+	{ "info", "print registe", cmd_info},
+	{ "x", "scanning ram", cmd_x}
 	/* TODO: Add more commands */
 
 };
